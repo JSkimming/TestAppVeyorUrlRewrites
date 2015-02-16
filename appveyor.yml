@@ -1,0 +1,74 @@
+﻿# Notes:
+#   - Minimal appveyor.yml file is an empty file. All sections are optional.
+#   - Indent each level of configuration with 2 spaces. Do not use tabs!
+#   - All section names are case-sensitive.
+#   - Section names should be unique on each level.
+
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+# Retain the NuGet package cache between builds
+cache:
+  - C:\Users\appveyor\AppData\Local\NuGet\Cache
+
+# version format
+version: 1.0.{build}
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+# http://blog.appveyor.com/2014/06/04/shallow-clone-for-git-repositories/
+shallow_clone: true
+
+# environment variables
+environment:
+  siteroot: https://localhost/
+
+# enable service required for build/tests
+services:
+  - iis                 # start IIS
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+# build Configuration, i.e. Debug, Release, etc.
+configuration: Release
+
+build:
+  publish_wap: true               # package Web Application Projects (WAP) for Web Deploy
+
+  # MSBuild verbosity level
+  verbosity: minimal
+
+# scripts to run before build
+before_build: nuget restore TestAppVeyorUrlRewrites.sln
+ 
+#---------------------------------#
+#       tests configuration       #
+#---------------------------------#
+ 
+test: off
+
+#---------------------------------#
+#     deployment configuration    #
+#---------------------------------#
+
+deploy:
+
+  # Local deployment for testing
+  - provider: Local
+    artifact: TestAppVeyorUrlRewrites
+    TestAppVeyorUrlRewrites.deploy_website: true
+    TestAppVeyorUrlRewrites.site_name: Default Web Site
+    TestAppVeyorUrlRewrites.remove_files: true
+
+before_deploy: PowerShell .\InstallSelfSignedCert.ps1
+
+after_deploy: |
+  appveyor PushArtifact C:\inetpub\wwwroot\web.config -FileName IntegrationTests.web.config.xml
+  echo Testing %siteroot%
+  appveyor AddMessage "Testing %siteroot%"
+  mspec-x86-clr4 --appveyor "Tests\TestAppVeyorUrlRewrites.IntegrationTests\bin\Release\TestAppVeyorUrlRewrites.IntegrationTests.dll"
