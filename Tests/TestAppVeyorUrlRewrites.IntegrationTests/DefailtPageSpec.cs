@@ -81,11 +81,11 @@ namespace TestAppVeyorUrlRewrites.IntegrationTests
             var builder = new UriBuilder(Helper.Siteroot);
 
             _end = builder.Uri;
-            if (_end.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
-            {
-                builder.Scheme = Uri.UriSchemeHttp;
-                builder.Port = 80;
-            }
+            //if (_end.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+            //{
+            //    builder.Scheme = Uri.UriSchemeHttp;
+            //    builder.Port = 80;
+            //}
             _start = builder.Uri;
         };
 
