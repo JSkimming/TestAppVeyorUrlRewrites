@@ -71,7 +71,6 @@ deploy:
 before_deploy: PowerShell .\InstallSelfSignedCert.ps1
 
 after_deploy: |
-  appveyor PushArtifact C:\inetpub\wwwroot\web.config -FileName IntegrationTests.web.config.xml
   echo Testing %siteroot%
   appveyor AddMessage "Testing %siteroot%"
   mspec-x86-clr4 --appveyor "Tests\TestAppVeyorUrlRewrites.IntegrationTests\bin\Release\TestAppVeyorUrlRewrites.IntegrationTests.dll"
