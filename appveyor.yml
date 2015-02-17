@@ -25,6 +25,9 @@ shallow_clone: true
 # environment variables
 environment:
   siteroot: https://localhost/
+  
+install:
+  - webpicmd /Install /Products:UrlRewrite2 /AcceptEula
 
 # enable service required for build/tests
 services:
