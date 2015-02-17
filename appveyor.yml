@@ -27,7 +27,7 @@ environment:
   siteroot: https://localhost/
   
 install:
-  - webpicmd /Install /Products:UrlRewrite2
+  - webpicmd /Install /Products:UrlRewrite2 /AcceptEula
 
 # enable service required for build/tests
 services:
